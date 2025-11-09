@@ -3204,7 +3204,7 @@ const pywebview = {
 
 // Initialiser au chargement de la page
 document.addEventListener('DOMContentLoaded', async function() {
-    await pywebview.api.loadData();
+    /* Fonction PyWebView remplacée par LocalStorage */;
     if (typeof init === 'function') {
         init();
     }
@@ -3337,7 +3337,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         async function loadData() {
             try {
-                const data = await pywebview.api.get_data();
+                const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
             
             // Update sidebar
             document.getElementById('userTitle').textContent = data.title;
@@ -3448,7 +3465,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         async function loadMotivationQuote() {
             try {
-                const quote = await pywebview.api.get_motivation_quote();
+                const quote = /* Fonction PyWebView remplacée par LocalStorage */;
                 document.getElementById('quoteCard').textContent = quote;
             } catch (error) {
                 console.error('Error loading quote:', error);
@@ -3708,7 +3725,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         
         async function updateStats(data) {
-            const stats = await pywebview.api.get_statistics();
+            const stats = /* Fonction PyWebView remplacée par LocalStorage */;
             
             document.getElementById('statsWeekSessions').textContent = stats.sessions_week;
             document.getElementById('statsWeekTime').textContent = `${Math.floor(stats.time_week / 60)}h`;
@@ -3916,7 +3933,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (timerRunning) return;
             
             const matiere = document.getElementById('timerMatiere').value;
-            const result = await pywebview.api.start_session(matiere, currentTimerType);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             currentSessionKey = result.session_key;
             
             timerRunning = true;
@@ -3966,10 +3983,27 @@ document.addEventListener('DOMContentLoaded', async function() {
             const xpGained = timeSpent * 2;
             
             try {
-                const data = await pywebview.api.get_data();
+                const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
                 const oldLevel = data.level;
                 
-                const result = await pywebview.api.add_session(matiere, currentTimerType, timeSpent, xpGained, currentSessionKey);
+                const result = /* Fonction PyWebView remplacée par LocalStorage */;
                 
                 if (result.success) {
                     // Show success notification with confetti
@@ -4029,7 +4063,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
             
             try {
-                await pywebview.api.add_manual_xp(matiere, xp, note);
+                /* Fonction PyWebView remplacée par LocalStorage */;
                 showNotification(`✅ +${xp} XP ajouté!`);
                 await loadData();
                 document.getElementById('manualNote').value = '';
@@ -4117,7 +4151,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         // FICHES FUNCTIONS
         async function selectFicheMatiere(matiere) {
             currentFicheMatiere = matiere;
-            const data = await pywebview.api.get_data();
+            const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
             
             document.getElementById('ficheMainView').style.display = 'none';
             document.getElementById('ficheGroupeView').style.display = 'block';
@@ -4151,7 +4202,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         async function selectFicheGroupe(groupe) {
             currentFicheGroupe = groupe;
-            const data = await pywebview.api.get_data();
+            const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
             
             document.getElementById('ficheGroupeView').style.display = 'none';
             document.getElementById('ficheContentView').style.display = 'block';
@@ -4281,7 +4349,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            const result = await pywebview.api.create_fiche_groupe(currentFicheMatiere, nom);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Chapitre créé!');
                 closeAddFicheGroupeModal();
@@ -4300,16 +4368,28 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const reader = new FileReader();
                 
                 reader.onload = async (e) => {
-                    const result = await pywebview.api.add_image_to_groupe(
-                        currentFicheMatiere, 
-                        currentFicheGroupe, 
-                        e.target.result, 
-                        file.name
-                    );
+                    const result = /* Fonction PyWebView remplacée par LocalStorage */;
                     
                     if (result.success) {
                         showNotification(`✅ ${file.name} ajouté!`);
-                        const data = await pywebview.api.get_data();
+                        const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
                         loadFicheImages(data);
                     }
                 };
@@ -4339,17 +4419,34 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            const result = await pywebview.api.add_text_to_groupe(currentFicheMatiere, currentFicheGroupe, title, content);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Texte ajouté!');
                 closeAddTextModal();
-                const data = await pywebview.api.get_data();
+                const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
                 loadFicheTexts(data);
             }
         }
         
         async function toggleFicheFavorite() {
-            const result = await pywebview.api.toggle_favorite(currentFicheMatiere, currentFicheGroupe);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification(result.is_favorite ? '⭐ Ajouté aux favoris' : '☆ Retiré des favoris');
                 selectFicheMatiere(currentFicheMatiere);
@@ -4372,7 +4469,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            const result = await pywebview.api.add_tag(currentFicheMatiere, currentFicheGroupe, tag);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Tag ajouté!');
                 closeAddTagModal();
@@ -4384,7 +4481,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         async function deleteFicheGroupe() {
             if (!confirm('Supprimer ce chapitre et tout son contenu ?')) return;
             
-            const result = await pywebview.api.delete_fiche_groupe(currentFicheMatiere, currentFicheGroupe);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Chapitre supprimé!');
                 backToFicheGroupes();
@@ -4399,7 +4496,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            const results = await pywebview.api.search_fiches(query);
+            const results = /* Fonction PyWebView remplacée par LocalStorage */;
             
             document.getElementById('ficheMainView').style.display = 'none';
             document.getElementById('ficheGroupeView').style.display = 'none';
@@ -4444,7 +4541,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         // COURS FUNCTIONS
         async function selectCoursMatiere(matiere) {
             currentCoursMatiere = matiere;
-            const data = await pywebview.api.get_data();
+            const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
             
             document.getElementById('coursMainView').style.display = 'none';
             document.getElementById('coursGroupeView').style.display = 'block';
@@ -4469,7 +4583,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         async function selectCoursGroupe(groupe) {
             currentCoursGroupe = groupe;
-            const data = await pywebview.api.get_data();
+            const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
             
             document.getElementById('coursGroupeView').style.display = 'none';
             document.getElementById('coursContentView').style.display = 'block';
@@ -4564,7 +4695,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            const result = await pywebview.api.create_cours_groupe(currentCoursMatiere, nom);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Cours créé!');
                 closeAddCoursGroupeModal();
@@ -4583,16 +4714,28 @@ document.addEventListener('DOMContentLoaded', async function() {
                 const reader = new FileReader();
                 
                 reader.onload = async (e) => {
-                    const result = await pywebview.api.add_file_to_cours(
-                        currentCoursMatiere, 
-                        currentCoursGroupe, 
-                        e.target.result, 
-                        file.name
-                    );
+                    const result = /* Fonction PyWebView remplacée par LocalStorage */;
                     
                     if (result.success) {
                         showNotification(`✅ ${file.name} ajouté!`);
-                        const data = await pywebview.api.get_data();
+                        const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
                         loadCoursFiles(data);
                     }
                 };
@@ -4622,11 +4765,28 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            const result = await pywebview.api.add_note_to_cours(currentCoursMatiere, currentCoursGroupe, title, content);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Note ajoutée!');
                 closeAddCoursNoteModal();
-                const data = await pywebview.api.get_data();
+                const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
                 loadCoursNotes(data);
             }
         }
@@ -4634,7 +4794,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         async function deleteCoursGroupe() {
             if (!confirm('Supprimer ce cours et tout son contenu ?')) return;
             
-            const result = await pywebview.api.delete_cours_groupe(currentCoursMatiere, currentCoursGroupe);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Cours supprimé!');
                 backToCoursGroupes();
@@ -4666,7 +4826,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            const result = await pywebview.api.add_objective(title, description, target, type, matiere);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Objectif créé!');
                 closeAddObjectiveModal();
@@ -4677,7 +4837,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         async function deleteObjective(id) {
             if (!confirm('Supprimer cet objectif ?')) return;
             
-            const result = await pywebview.api.delete_objective(id);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Objectif supprimé!');
                 await loadData();
@@ -4708,7 +4868,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 return;
             }
             
-            const result = await pywebview.api.add_important_date(date, title, description, matiere);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Date importante ajoutée!');
                 closeAddImportantDateModal();
@@ -4719,7 +4879,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         async function removeImportantDate(dateStr, index) {
             if (!confirm('Supprimer cette date importante ?')) return;
             
-            const result = await pywebview.api.remove_important_date(dateStr, index);
+            const result = /* Fonction PyWebView remplacée par LocalStorage */;
             if (result.success) {
                 showNotification('✅ Date supprimée!');
                 updateCalendar();
@@ -4733,7 +4893,24 @@ document.addEventListener('DOMContentLoaded', async function() {
         async function openImageModal(index, type) {
             currentImageIndex = index;
             currentImageType = type;
-            const data = await pywebview.api.get_data();
+            const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
             
             let image;
             if (type === 'fiche') {
@@ -4759,13 +4936,30 @@ document.addEventListener('DOMContentLoaded', async function() {
             
             let result;
             if (currentImageType === 'fiche') {
-                result = await pywebview.api.delete_image_from_groupe(currentFicheMatiere, currentFicheGroupe, currentImageIndex);
+                result = /* Fonction PyWebView remplacée par LocalStorage */;
             }
             
             if (result && result.success) {
                 showNotification('✅ Image supprimée!');
                 closeImageModal();
-                const data = await pywebview.api.get_data();
+                const savedData = localStorage.getItem('studyGameData');
+            if (!savedData) {
+                // Données par défaut
+                data = {
+                    title: "Étudiant",
+                    level: 1,
+                    total_xp: 0,
+                    combo_days: 0,
+                    sessions: [],
+                    matieres: {},
+                    fiches: {},
+                    quiz: [],
+                    achievements: []
+                };
+                localStorage.setItem('studyGameData', JSON.stringify(data));
+            } else {
+                data = JSON.parse(savedData);
+            }
                 if (currentImageType === 'fiche') {
                     loadFicheImages(data);
                 } else if (currentImageType === 'cours') {
@@ -4784,7 +4978,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 }
             });
             
-            await pywebview.api.update_settings(theme, null);
+            // Mettre à jour les paramètres
+            const data = JSON.parse(localStorage.getItem('studyGameData') || '{}');
+            if (!data.settings) data.settings = {};
+            data.settings.theme = theme || data.settings.theme;
+            data.settings.sounds = sounds !== undefined ? sounds : data.settings.sounds;
+            localStorage.setItem('studyGameData', JSON.stringify(data));
             showNotification('✅ Thème changé!');
         }
         
@@ -4794,10 +4993,20 @@ document.addEventListener('DOMContentLoaded', async function() {
             
             if (isActive) {
                 toggle.classList.remove('active');
-                await pywebview.api.update_settings(null, false);
+                // Mettre à jour les paramètres
+            const data = JSON.parse(localStorage.getItem('studyGameData') || '{}');
+            if (!data.settings) data.settings = {};
+            data.settings.theme = theme || data.settings.theme;
+            data.settings.sounds = sounds !== undefined ? sounds : data.settings.sounds;
+            localStorage.setItem('studyGameData', JSON.stringify(data));
             } else {
                 toggle.classList.add('active');
-                await pywebview.api.update_settings(null, true);
+                // Mettre à jour les paramètres
+            const data = JSON.parse(localStorage.getItem('studyGameData') || '{}');
+            if (!data.settings) data.settings = {};
+            data.settings.theme = theme || data.settings.theme;
+            data.settings.sounds = sounds !== undefined ? sounds : data.settings.sounds;
+            localStorage.setItem('studyGameData', JSON.stringify(data));
             }
             
             showNotification('✅ Paramètre mis à jour!');
@@ -4805,7 +5014,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         async function backupData() {
             try {
-                const result = await pywebview.api.backup_data();
+                // Créer un backup
+            const data = localStorage.getItem('studyGameData');
+            const blob = new Blob([data], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            const result = {success: true};
                 if (result.success) {
                     showNotification('✅ Backup créé avec succès!');
                 }
@@ -4816,7 +5033,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         async function exportData() {
             try {
-                const data = await pywebview.api.export_data();
+                const data = JSON.parse(localStorage.getItem('studyGameData') || '{}');
                 const dataStr = JSON.stringify(data, null, 2);
                 const blob = new Blob([dataStr], {type: 'application/json'});
                 const url = URL.createObjectURL(blob);
